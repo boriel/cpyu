@@ -52,3 +52,65 @@ class CPU:
         result = self.memory[self.SP]
         self.SP += 1
         return result
+
+    # Base pointer (BP) instructions
+    def ld_bp_sp(self):
+        """ Performs BP <- SP
+        """
+        self.BP = self.SP
+
+    def ld_sp_bp(self):
+        """ Performs SP <- BP
+        """
+        self.SP = self.SP
+
+    def push_bp(self):
+        self.push(self.BP)
+
+    def pop_bp(self):
+        self.BP = self.pop()
+
+    # Arithmetic integer 2-ary operations
+    def add(self):
+        self.push(self.pop() + self.pop())
+
+    def sub(self):
+        b = self.pop()
+        a = self.pop()
+        self.push(a - b)
+
+    def mul(self):
+        self.push(self.pop() * self.pop())
+
+    def div(self):
+        b = self.pop()
+        a = self.pop()
+        self.push(a // b)
+
+    def mod(self):
+        b = self.pop()
+        a = self.pop()
+        self.push(a % b)
+
+    # bitwise integer 2-ary operations
+    def and_(self):
+        self.push(self.pop() & self.pop())
+
+    def or_(self):
+        self.push(self.pop() | self.pop())
+
+    def xor(self):
+        self.push(self.pop() ^ self.pop())
+
+    # Arithmetic and bitwise unary operations
+    def neg(self):
+        """ Negates the top of the stack
+        """
+        self.push(-self.pop())
+
+    def cpl(self):
+        """ Complements bits top of the stack
+        """
+        self.push(self.pop() ^ self.mask)
+
+
