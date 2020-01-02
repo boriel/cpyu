@@ -5,10 +5,12 @@ from typing import List
 class CPU:
     SP: int = None  # Stack pointer
     PC: int = None  # Program Counter
-    memory: List[int] = []
+    BP: int = None  # Base Pointer
+    memory: List[int] = None
 
-    def __init__(self, word_size=32, mem_size=1024 * 1024):
+    def __init__(self, word_size=16, mem_size=1024 * 1024):
         self.PC = 0
+        self.BP = 0
         self.memory = [0] * mem_size
         self.word_size: int = word_size
         self.mask: int = (1 << word_size) - 1  # Mask
@@ -29,6 +31,11 @@ class CPU:
         self.log('Execution halted')
         sys.exit(1)
 
+    def to_word(self, value: int) -> int:
+        """ Applies bit-mask to the given value
+        """
+        return value & self.mask
+
     def push(self, value: int):
         """ Pushes a value in the stack
         """
@@ -36,7 +43,7 @@ class CPU:
         if self.SP < 0:
             self.panic("Stack overflow")
 
-        self.memory[self.SP] = value
+        self.memory[self.SP] = self.to_word(value)
 
     def pop(self) -> int:
         if self.SP >= len(self.memory):
